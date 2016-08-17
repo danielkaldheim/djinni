@@ -232,7 +232,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
         // Field definitions.
         for (f <- r.fields) {
           w.wl
-          w.wl(s"/*package*/ final ${marshal.fieldType(f.ty)} ${idJava.field(f.ident)};")
+          w.wl(s"/*package*/ ${marshal.fieldType(f.ty)} ${idJava.field(f.ident)};")
         }
 
         // Constructor.
@@ -260,6 +260,10 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
           marshal.nullityAnnotation(f.ty).foreach(w.wl)
           w.w("public " + marshal.typename(f.ty) + " " + idJava.method("get_" + f.ident.name) + "()").braced {
             w.wl("return " + idJava.field(f.ident) + ";")
+          }
+          w.wl
+          w.w("public void " + idJava.method("set_" + f.ident.name) + "(" + marshal.typename(f.ty) + " " + marshal.typename(f.ty).toLowerCase().substring(0,1) + ")").braced {
+            w.wl(idJava.field(f.ident) + " = " + marshal.typename(f.ty).toLowerCase().substring(0,1) + ";")
           }
         }
 
